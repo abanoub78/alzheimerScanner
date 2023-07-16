@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="css/signup.css"/>
+    <link rel="stylesheet" href="css/normalize.css"/>
+    <link rel="stylesheet" href="css/all.min.css"/>
+</head>
+<body>
+<div class="container">
+  <div class="box">
+    <h2>Sign Up</h2>
+    <div id= "create-acct" class="main">
+      <input id = "username" type = "text" placeholder = "User Name"></input>
+      <input id = "email-signup" type = "text" placeholder = "Email *"></input>
+      <input id = "confirm-email-signup" type = "email" placeholder = "Confirm Email *"></input>
+      <input id = "password-signup" type = "password" placeholder = "Password *"></input>
+      <input id = "confirm-password-signup" type = "password" placeholder = "Confirm Password *"></input>
+      <button id = "create-acct-btn">Sign Up</button>
+    </div>
+  </div>
+</div>
+<script type="module" >
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-analytics.js";
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
+  import { getDatabase, ref, push , onValue } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-database.js";
+
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDdpUtwA7n1G3E-2kbha2U--_xZ51HslJM",
+    authDomain: "scanbraindb.firebaseapp.com",
+    databaseURL: "https://scanbraindb-default-rtdb.firebaseio.com",
+    projectId: "scanbraindb",
+    storageBucket: "scanbraindb.appspot.com",
+    messagingSenderId: "616675558287",
+    appId: "1:616675558287:web:96c70bdcb6b98c373ec1fa",
+    measurementId: "G-9CQQBCH5RW"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const auth = getAuth(app);
+  const database = getDatabase(app);
+
+  const userinfo = ref(database, "UsersInfo");
+  
+
+  var signupEmail, signupPassword, confirmSignupEmail, confirmSignUpPassword;
+
+const signupEmailIn = document.getElementById("email-signup");
+const confirmSignupEmailIn = document.getElementById("confirm-email-signup");
+const signupPasswordIn = document.getElementById("password-signup");
+const confirmSignUpPasswordIn = document.getElementById("confirm-password-signup");
+const createacctbtn = document.getElementById("create-acct-btn");
+
+
+
+
+createacctbtn.addEventListener("click", function() {
+var isVerified = true;
+
+signupEmail = signupEmailIn.value;
+confirmSignupEmail = confirmSignupEmailIn.value;
+if(signupEmail != confirmSignupEmail) {
+  window.alert("Email fields do not match. Try again.")
+  isVerified = false;
+}
+
+signupPassword = signupPasswordIn.value;
+confirmSignUpPassword = confirmSignUpPasswordIn.value;
+if(signupPassword != confirmSignUpPassword) {
+  window.alert("Password fields do not match. Try again.")
+  isVerified = false;
+}
+
+if(signupEmail == null || confirmSignupEmail == null || signupPassword == null || confirmSignUpPassword == null) {
+window.alert("Please fill out all required fields.");
+isVerified = false;
+}
+
+if(isVerified) {
+createUserWithEmailAndPassword(auth, signupEmail, signupPassword)
+  .then((userCredential) => {
+  // Signed in 
+  const user = userCredential.user;
+
+
+const email = document.getElementById("email-signup").value;
+const username = document.getElementById("username").value;
+
+
+
+const pass = document.getElementById("password-signup").value;
+const lastlogin=Date.now()
+
+saveMessages(username,email,pass,lastlogin)
+
+  window.location.assign("home2.html");
+  // ...
+  window.alert("Success! Account created.");
+})
+.catch((error) => {
+  const errorCode = error.code;
+  const errorMessage = error.message;
+  console.log(errorMessage)
+
+  // ..
+  window.alert("Error occurred. Try again.");
+});
+}
+});
+
+const saveMessages = (username,email,pass,lastlogin) => {
+    push(userinfo, {
+      username: username,
+      email: email,
+      pass:pass,
+      lastlogin:lastlogin,
+    });
+  };
+
+
+
+</script>
+
+</body>
+</html>

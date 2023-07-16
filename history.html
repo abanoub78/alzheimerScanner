@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
+    <link rel="stylesheet" href="css/history.css"/>
+    <link rel="stylesheet" href="css/normalize.css"/>
+    <link rel="stylesheet" href="css/all.min.css"/>
+</head>
+<body>
+  <h1 class="title">History</h1>
+  <ul id="dataList"></ul>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
+  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDdpUtwA7n1G3E-2kbha2U--_xZ51HslJM",
+    authDomain: "scanbraindb.firebaseapp.com",
+    databaseURL: "https://scanbraindb-default-rtdb.firebaseio.com",
+    projectId: "scanbraindb",
+    storageBucket: "scanbraindb.appspot.com",
+    messagingSenderId: "616675558287",
+    appId: "1:616675558287:web:96c70bdcb6b98c373ec1fa",
+    measurementId: "G-9CQQBCH5RW"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+  const storageRef = ref(database, "Results");
+
+
+  
+
+  onValue(storageRef, (snapshot) => {
+    const data = snapshot.val();
+    const dataList = document.getElementById("dataList");
+    const storedMessages = JSON.parse(localStorage.getItem('messages')) || [];
+
+
+  storedMessages.forEach((message) => {
+  const listItem = document.createElement('li');
+  let img = document.createElement("img");
+  let h4 = document.createElement("h4");
+  let txt=document.createTextNode(`Timedate: ${message.datetimeValue}`)
+
+  h4.appendChild(txt)
+  listItem.appendChild(h4)
+  
+  // listItem.textContent = `Timedate: ${message.datetimeValue}`;
+  listItem.appendChild(img)
+  dataList.appendChild(listItem);
+  document.body.appendChild(dataList)
+
+  img.src = message.imageDataURL;
+
+
+
+});
+const listItem2 = document.createElement('li');
+listItem2.className="dis"
+const storediseases = JSON.parse(localStorage.getItem('storedValues')) || [];
+    storediseases.forEach((dis) => {
+    let h3 = document.createElement("h3");
+    let txt2=document.createTextNode(`${dis}`)
+    h3.appendChild(txt2)
+    listItem2.appendChild(h3)
+    dataList.appendChild(listItem2)
+    document.body.appendChild(dataList)
+});
+
+
+
+  });
+
+
+  
+</script>
+</body>
+
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="css/profile.css"/>
+    <link rel="stylesheet" href="css/normalize.css"/>
+    <link rel="stylesheet" href="css/all.min.css"/>
+</head>
+<body>
+<div class="container">
+  <div class="box">
+    <img src="pics/user.png" id="pic2">
+    <div class="text">
+      <h2 class="username">User Name</h2>
+    <button class="editprofile">Edit Profile</button>
+    </div>
+    <div class="profileEdite">
+      <img src="pics/user.png" id="pic1">
+      <div class="text">
+        <button class="chph"><input type="file" class="uploadpic">Change Image </button>
+        <label for="">Rename </label>
+        <input type="text" class="newname">
+    </div>
+    <button class="save">Save</button>
+    <button class="close">Close</button>
+
+  </div>
+  <div class="settings">
+    <div class="set">
+      <div class="title">
+        <i class="fas fa-cog sett"></i>
+        <h2>Settings & Privacy</h2>
+        <i class="fas fa-arrow-down arw"></i>
+      </div>
+     <div class="content">
+      <div class="pass">
+        <i class="fas fa-key key"></i>
+        <h2 class="passdrop">Password</h2>
+        <div class="PassSet">
+          <div class="text">
+            <label for="">Old Password </label>
+            <input type="text" class="oldpass">
+            <label for="">New Password </label>
+            <input type="text" class="newpass">
+        </div>
+      <div class="btns">
+        <button class="update">Update</button>
+        <button class="Close">Close</button>
+      </div>
+    
+      </div>
+      </div>
+      <!-- <div class="mail">
+        <i class="fas fa-envelope mail"></i>
+        <h2>Email</h2>
+      </div>
+      <div class="phone">
+        <i class="fas fa-phone ph"></i>
+        <h2>Phone Number</h2>
+      </div> -->
+     </div>
+    </div>
+    
+
+  </div>
+  <script type="module" >
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-analytics.js";
+    import { getDatabase, ref, push , onValue } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-database.js";
+    import { getAuth, updatePassword } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
+
+  
+    const firebaseConfig = {
+      apiKey: "AIzaSyDdpUtwA7n1G3E-2kbha2U--_xZ51HslJM",
+      authDomain: "scanbraindb.firebaseapp.com",
+      databaseURL: "https://scanbraindb-default-rtdb.firebaseio.com",
+      projectId: "scanbraindb",
+      storageBucket: "scanbraindb.appspot.com",
+      messagingSenderId: "616675558287",
+      appId: "1:616675558287:web:96c70bdcb6b98c373ec1fa",
+      measurementId: "G-9CQQBCH5RW"
+    };
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const auth = getAuth(app);
+  const database = getDatabase(app);
+
+  const userinfo = ref(database, "UsersInfo");
+
+  const updateBtn = document.querySelector('.update');
+
+  updateBtn.addEventListener('click', () => {
+  const oldPasswordInput = document.querySelector('.oldpass');
+  const newPasswordInput = document.querySelector('.newpass');
+  
+  const oldPassword = oldPasswordInput.value;
+  const newPassword = newPasswordInput.value;
+  
+  const user = auth.currentUser;
+  console.log(user)
+  
+  const credential = auth.EmailAuthProvider.credential(
+      user.email,
+      oldPassword
+    );
+
+    user.reauthenticateWithCredential(credential)
+      .then(() => {
+        updatePassword(user, newPassword)
+          .then(() => {
+            console.log("Password updated successfully");
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  });
+
+
+  </script>
+  <script src="javascript/profileSettings.js"></script>
+
+</body>
+</html>

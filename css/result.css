@@ -1,0 +1,67 @@
+
+.container{
+    background-image: url(../pics/res.webp);
+    background-size:cover ;
+    background-position: center;
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
+.box{
+    position: absolute;
+    width: 90%;
+    max-width: 450px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background-color: #fff;
+    padding: 100px;
+    text-align: center;
+    border-radius: 25%;
+}
+.box h2{
+    font-size: 50px;
+    color: black;
+    margin-bottom: 50px;
+    position: relative;
+}
+.box span{
+    color: #2196f3;
+}
+.box .input_feild{
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    padding: 40px;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #eaeaea;
+}
+.input_feild input{
+    width: 100%;
+    background-color: transparent;
+    border: 0;
+    outline: 0;
+    padding: 15px 15px;
+    font-weight: bold;
+
+}
+
+form p a{
+    text-decoration: none;
+    color: #2196f3;
+}
+.btn{
+    background-color: #2196f3;
+    color: white;
+    font-size: 25px;
+    padding: 15px;
+    border: none;
+    outline: 0;
+    cursor: pointer;
+}
+.btn a{
+    text-decoration: none;
+    color: white;
+}

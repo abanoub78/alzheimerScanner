@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>scan</title>
+    <link rel="stylesheet" href="css/scan.css"/>
+    <link rel="stylesheet" href="css/normalize.css"/>
+    <link rel="stylesheet" href="css/all.min.css"/>
+</head>
+<body>
+<div class="container">
+  <div class="box">
+    <form>
+      <div class="input_group">
+        <div class="alert">Saved Successfully</div>
+        <h2>Scanner</h2>
+
+
+        <div class="input_feild">
+          <label>Choose today's date</label>
+          <input type="datetime-local" class="timedate">
+        </div>
+
+
+        <div class="input_feild">
+          <label>Upload MRI Pic</label>
+          <input type="file" id="inputPic">
+        </div>
+        <img src="" id="pic" class="show">
+
+      </div>
+      <button class="btn" id="btnscan" >Scan</button>
+
+      <!-- <a href="result.html">Scan</a> -->
+    </form>
+    <div class="res">
+      <h2>Result</h2>
+      <h2>Degree of demented = <span class="result"> ... </span></h2>
+      <button class="btn save">Save</button>
+      <button class="btn" id="newmri">New MRI</button>
+
+    </div>
+
+
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-analytics.js";
+  import { getDatabase, ref, push ,onValue  } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-database.js";
+  import { getStorage, uploadBytes } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-storage.js";
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
+
+
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDdpUtwA7n1G3E-2kbha2U--_xZ51HslJM",
+    authDomain: "scanbraindb.firebaseapp.com",
+    databaseURL: "https://scanbraindb-default-rtdb.firebaseio.com",
+    projectId: "scanbraindb",
+    storageBucket: "scanbraindb.appspot.com",
+    messagingSenderId: "616675558287",
+    appId: "1:616675558287:web:96c70bdcb6b98c373ec1fa",
+    measurementId: "G-9CQQBCH5RW"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const database = getDatabase(app);
+  const storage = getStorage(app);
+
+  const storageRef = ref(database, "Results");
+  var saveBtn = document.querySelector('.save');
+  saveBtn.addEventListener('click', function() {
+
+
+  var datetimeValue = document.querySelector('.timedate').value;
+  const file = document.getElementById('inputPic').files[0];
+  const reader = new FileReader();
+   reader.onload = (event) => {
+     // Store the imageDataURL in the Realtime Database
+     const imageDataURL = event.target.result;
+console.log(imageDataURL)
+saveMessages(datetimeValue,imageDataURL);
+document.querySelector(".alert").style.display = "block";
+  
+    // remove the alert
+    setTimeout(() => {
+      document.querySelector(".alert").style.display = "none";
+    }, 1000);
+
+   };
+   reader.readAsDataURL(file);
+
+
+
+
+
+});
+
+const saveMessages = (datetimeValue,imageDataURL) => {
+    push(storageRef, {
+      datetimeValue: datetimeValue,
+      imageDataURL:imageDataURL
+    });
+
+    const message = {
+    datetimeValue: datetimeValue,
+    imageDataURL: imageDataURL
+  };
+
+  // Get the existing messages from local storage
+  let messages = JSON.parse(localStorage.getItem('messages')) || [];
+
+  // Add the new message to the array
+  messages.push(message);
+
+  // Save the updated messages array back to local storage
+  localStorage.setItem('messages', JSON.stringify(messages));
+
+
+  };
+
+  var output=[];
+  const res = ref(database, "Results");
+  onValue(res, (snapshot) => {
+  const data = snapshot.val();
+  for (const key in data) {
+    const resobj = data[key];
+    output.push(resobj.username)
+  }
+
+
+});
+
+</script> 
+
+
+<script src="javascript/result.js"></script>
+
+</body>
+
+</html>
